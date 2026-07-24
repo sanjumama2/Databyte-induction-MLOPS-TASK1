@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic AI Guesser</title>
+    <style>
+        body {
+            /* sky blue*/
+            background-color: #4A90E2; 
+        }
+    </style>
+</head>
+<body>
+    
+    <h2>Upload an Image for the AI</h2>
+
+    <!--Server status indicator -->
+    <p>Server Status: <b id="status">Connecting...</b></p>
+
+    <!--  The input button  -->
+    <input type="file" id="uploader">
+    
+    <!--  The place where the answer will appear -->
+    <p>AI Answer: <b id="result">Waiting...</b></p>
+
+    <script>
+        // Connect to the Python FastAPI backend
+        const ws = new WebSocket("ws://localhost:8000/ws");
+        
+        const fileInput = document.getElementById("uploader");
+        const answerText = document.getElementById("result");
+        const statusText = document.getElementById("status");
+
+        //   show server status
+        ws.onopen = function() {
+            statusText.innerText = "Online 🟢";
+        };
+
+        ws.onclose = function() {
+            statusText.innerText = "Offline 🔴";
+        };
+
+        ws.onerror = function() {
+            statusText.innerText = "Error Connecting 🔴";
+        };
+
+        
+        fileInput.addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            
+            // Turn the file into raw bytes and send it through the socket
+            file.arrayBuffer().then(function(buffer) {
+                ws.send(buffer);
+                answerText.innerText = "Thinking...";
+            });
+        });
+
+        //  When the Python backend sends the answer back...
+        ws.onmessage = function(event) {
+            // Read the JSON data
+            const data = JSON.parse(event.data);
+            
+            // Show answer on screen
+            answerText.innerText = data.label;
+        };
+    </script>
+</body>
+</html>
