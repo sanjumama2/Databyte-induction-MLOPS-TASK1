@@ -1,3 +1,6 @@
+#THIS IS A EDIT TO A ALREADY COMMITED OPEN SOURCE PROJECT WITH EDITED BACKEND AND FRONTEND HTML FILES
+
+BELOW IS THE OG README
 # 🤖 AI Vision Integration Task — DataByte
 
 > **Goal:** Build a real-time, browser-based handwritten digit recognition app (1-9) powered by a local MNIST model — no cloud APIs, no shortcuts, just you, the code, and the model.
